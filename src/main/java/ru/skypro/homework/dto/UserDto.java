@@ -1,6 +1,6 @@
 package ru.skypro.homework.dto;
 
-public class User {
+public class UserDto {
     private Integer id;
     private String email;
     private String firstName;
