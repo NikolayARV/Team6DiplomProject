@@ -4,13 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.List;
-
 @AllArgsConstructor
 @EqualsAndHashCode
 @Data
-public class AdsDTO {
-    private Integer count; //($int32) общее кол-во объявлений
-    private List<AdDTO> results;
-
+public class NewPassword {
+    private String currentPassword; //minLength: 8, maxLength: 16
+    private String newPassword; // //minLength: 8, maxLength: 16
 }
