@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.dto.AdDTO;
-import ru.skypro.homework.dto.Ads;
-import ru.skypro.homework.dto.CreateOrUpdateAd;
-import ru.skypro.homework.dto.CreateOrUpdateComment;
+import ru.skypro.homework.dto.CreateOrUpdateAdDto;
+import ru.skypro.homework.dto.CreateOrUpdateCommentDto;
 import ru.skypro.homework.service.AdsService;
 
 @Slf4j
@@ -25,7 +23,7 @@ public class AdsController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createAd(@RequestBody CreateOrUpdateAd createOrUpdateAd, @RequestBody String image) {
+    public ResponseEntity<?> createAd(@RequestBody CreateOrUpdateAdDto createOrUpdateAdDto, @RequestBody String image) {
         //запрос в сервис
         return ResponseEntity.ok().build();
     }
@@ -40,7 +38,7 @@ public class AdsController {
         return ResponseEntity.ok().build();
     }
     @PatchMapping("{id}")
-    public ResponseEntity<?> UpdateAd(@RequestBody CreateOrUpdateAd createOrUpdateAd, @PathVariable Integer id) {
+    public ResponseEntity<?> UpdateAd(@RequestBody CreateOrUpdateAdDto createOrUpdateAdDto, @PathVariable Integer id) {
 //запрос в сервис
         return ResponseEntity.ok().build();
     }
@@ -64,7 +62,7 @@ public class AdsController {
         return ResponseEntity.ok().build();
     }
     @PostMapping("{id}/comments")
-    public ResponseEntity<?> createComment(@RequestBody CreateOrUpdateComment createOrUpdateComment, @PathVariable Integer id) {
+    public ResponseEntity<?> createComment(@RequestBody CreateOrUpdateCommentDto createOrUpdateCommentDto, @PathVariable Integer id) {
         //запрос в сервис
         return ResponseEntity.ok().build();
     }
@@ -77,7 +75,7 @@ public class AdsController {
     @PatchMapping("{id}/comments/{commentId}")
     public ResponseEntity<?> UpdateComment(@PathVariable Integer id,
                                            @PathVariable Integer commentId,
-                                           @RequestBody CreateOrUpdateAd createOrUpdateAd) {
+                                           @RequestBody CreateOrUpdateAdDto createOrUpdateAdDto) {
 //запрос в сервис
         return ResponseEntity.ok().build();
     }

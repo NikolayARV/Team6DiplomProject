@@ -1,8 +1,10 @@
 package ru.skypro.homework.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
-
+@Data
 @Entity
 public class Comment {
     @Id
@@ -21,4 +23,5 @@ public class Comment {
     private Integer createdAt;
     //текст комментария
     private String text;
+
 }

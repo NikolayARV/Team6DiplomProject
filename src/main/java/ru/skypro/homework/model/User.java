@@ -1,10 +1,12 @@
 package ru.skypro.homework.model;
 
+import lombok.Data;
 import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
 
 @Entity
+@Data
 @Table(name = "author")
 public class User {
     @Id
@@ -12,7 +14,7 @@ public class User {
     private Integer id;
     private String email;
     private String firstName;
-    private String lastNAme;
+    private String lastName;
     private String phone;
     private Role role;
     private String image;
