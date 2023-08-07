@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.dto.NewPassword;
-import ru.skypro.homework.dto.UpdateUser;
+import ru.skypro.homework.dto.NewPasswordDto;
+import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.service.UserService;
 
 @Slf4j
@@ -17,7 +17,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/set_password")
-    public ResponseEntity<?> newPassword(@RequestBody NewPassword newPassword) {
+    public ResponseEntity<?> newPassword(@RequestBody NewPasswordDto newPasswordDto) {
         //запрос в сервис
             return ResponseEntity.ok().build();
 
@@ -28,7 +28,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
     @PatchMapping("/me")
-    public ResponseEntity<?> updateUser(@RequestBody UpdateUser updateUser) {
+    public ResponseEntity<?> updateUser(@RequestBody UpdateUserDto updateUserDto) {
 //запрос в сервис
         return ResponseEntity.ok().build();
     }
