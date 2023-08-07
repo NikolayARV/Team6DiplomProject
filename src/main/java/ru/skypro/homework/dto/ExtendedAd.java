@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Data
-public class ExtendedAdDTO {
+public class ExtendedAd {
     private Integer pk; // ($int32) id объявления
     private String authorFirstName; // имя автороа объявления
     private String authorLastName; // фамилия автора объявления

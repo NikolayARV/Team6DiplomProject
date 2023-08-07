@@ -1,6 +1,6 @@
 package ru.skypro.homework.model;
 
-import ru.skypro.homework.dto.RoleDTO;
+import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
 

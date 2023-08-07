@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Data
-public class CommentsDTO {
+public class Comments {
     private Integer count; //($int32) общее кол-во комментариев
     private List<CommentDTO> results;
 }
