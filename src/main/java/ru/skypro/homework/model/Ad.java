@@ -3,6 +3,8 @@ package ru.skypro.homework.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigInteger;
+
 @Data
 @Entity
 public class Ad {

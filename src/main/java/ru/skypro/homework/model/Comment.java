@@ -15,6 +15,9 @@ public class Comment {
     //id автора комментария
     private User author;
 
+    @ManyToOne
+    //id объявления
+    private Ad ad;
     //ссылка на аватар автора комментария
     private String authorImage;
     //имя создателя комментария
