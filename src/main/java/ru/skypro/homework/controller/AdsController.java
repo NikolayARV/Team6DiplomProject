@@ -16,6 +16,10 @@ import ru.skypro.homework.service.AdsService;
 public class AdsController {
     private final AdsService adsService;
 
+    public AdsController(AdsService adsService) {
+        this.adsService = adsService;
+    }
+
     @GetMapping
     public ResponseEntity<?> ads() {
 //запрос в сервис

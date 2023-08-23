@@ -16,6 +16,10 @@ import ru.skypro.homework.service.UserService;
 public class UserController {
     private final UserService userService;
 
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @PostMapping("/set_password")
     public ResponseEntity<?> newPassword(@RequestBody NewPasswordDto newPasswordDto) {
         //запрос в сервис
