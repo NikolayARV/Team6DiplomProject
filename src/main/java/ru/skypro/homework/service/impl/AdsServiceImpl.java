@@ -5,10 +5,17 @@ import ru.skypro.homework.dto.AdDto;
 import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.dto.CreateOrUpdateAdDto;
 import ru.skypro.homework.model.Ad;
+import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.service.AdsService;
 
 @Service
 public class AdsServiceImpl implements AdsService {
+
+    private AdRepository adRepository;
+
+    public AdsServiceImpl(AdRepository adRepository) {
+        this.adRepository = adRepository;
+    }
 
     @Override
     public AdsDto getAllAds() {

@@ -15,9 +15,9 @@ import java.util.Optional;
 @EqualsAndHashCode
 @Data
 public class CommentDto {
-    private Integer author; // ($int32) id автороа комментария
-    private String authorImage; // ссылка на аватар автора комментария
-    private String authorFirstName; // имя создателя комментария
+    private Integer user; // ($int32) id автороа комментария
+    private String userImage; // ссылка на аватар автора комментария
+    private String userFirstName; // имя создателя комментария
     private Integer createdAt; //($int32) дата и время создания комментария в миллисекундах с 00:00:00 01.01.1970
     private Integer pk; //($int32) id комментария
     private String text; // текст комментария
@@ -26,9 +26,9 @@ public class CommentDto {
     public static CommentDto fromComment(Comment comment) {
         CommentDto dto = new CommentDto();
         dto.setPk(comment.getPk());
-        dto.setAuthor(comment.getAuthor().getId());
-        dto.setAuthorImage(comment.getAuthorImage());
-        dto.setAuthorFirstName(comment.getAuthorFirstName());
+        dto.setUser(comment.getUser().getId());
+        dto.setUserImage(comment.getUserImage());
+        dto.setUserFirstName(comment.getUserFirstName());
         dto.setCreatedAt(comment.getCreatedAt());
         dto.setText(comment.getText());
 
@@ -39,9 +39,9 @@ public class CommentDto {
     public Comment toComment() {
         Comment comment = new Comment();
         comment.setPk(this.getPk());
-        comment.setAuthor(userRepository.findById(this.getAuthor()).orElseThrow());
-        comment.setAuthorImage(this.getAuthorImage());
-        comment.setAuthorFirstName(this.getAuthorFirstName());
+        comment.setUser(userRepository.findById(this.getUser()).orElseThrow());
+        comment.setUserImage(this.getUserImage());
+        comment.setUserFirstName(this.getUserFirstName());
         comment.setCreatedAt(this.getCreatedAt());
         comment.setText(this.getText());
 

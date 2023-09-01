@@ -1,11 +1,14 @@
 package ru.skypro.homework.service.impl;
 
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Register;
+import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.dto.UserDto;
+import ru.skypro.homework.model.User;
+import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AuthService;
 
 @Service
@@ -13,11 +16,13 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserDetailsManager manager;
     private final PasswordEncoder encoder;
+    private final UserRepository userRepository;
 
     public AuthServiceImpl(UserDetailsManager manager,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder, UserRepository userRepository) {
         this.manager = manager;
         this.encoder = passwordEncoder;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -34,13 +39,16 @@ public class AuthServiceImpl implements AuthService {
         if (manager.userExists(register.getUsername())) {
             return false;
         }
-        manager.createUser(
-                User.builder()
-                        .passwordEncoder(this.encoder::encode)
-                        .password(register.getPassword())
-                        .username(register.getUsername())
-                        .roles(register.getRole().name())
-                        .build());
+        UserDto userDto =new UserDto();
+        userDto.setUsername(register.getUsername());
+        userDto.setPassword(encoder.encode(register.getPassword()));
+        userDto.setRole(String.valueOf(Role.USER));
+        userDto.setFirstName(register.getFirstName());
+        userDto.setLastName(register.getLastName());
+        userDto.setPhone(register.getPhone());
+        User user = userDto.toUser();
+        userRepository.save(user);
+
         return true;
     }
 

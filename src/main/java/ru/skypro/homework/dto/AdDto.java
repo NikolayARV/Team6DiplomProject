@@ -13,7 +13,7 @@ import ru.skypro.homework.repository.UserRepository;
 @EqualsAndHashCode
 @Data
 public class AdDto {
-    private Integer author; //($int32) id автора объявления
+    private Integer user; //($int32) id автора объявления
     private String image; // ссылка на картинку объявления
     private Integer pk; //($int32)id объявления
     private Integer price; //($int32) цена объявления
@@ -23,7 +23,7 @@ public class AdDto {
     public static AdDto fromAd(Ad ad) {
         AdDto dto = new AdDto();
         dto.setPk(ad.getPk());
-        dto.setAuthor(ad.getAuthor().getId());
+        dto.setUser(ad.getUser().getId());
         dto.setImage(ad.getImage());
         dto.setPrice(ad.getPrice());
         dto.setTitle(ad.getTitle());
@@ -35,7 +35,7 @@ public class AdDto {
     public Ad toAd() {
         Ad ad = new Ad();
         ad.setPk(this.getPk());
-        ad.setAuthor(userRepository.findById(this.getAuthor()).orElseThrow());
+        ad.setUser(userRepository.findById(this.getUser()).orElseThrow());
         ad.setImage(this.getImage());
         ad.setPrice(this.getPrice());
         ad.setTitle(this.getTitle());
