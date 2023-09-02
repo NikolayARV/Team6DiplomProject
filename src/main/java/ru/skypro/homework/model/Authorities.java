@@ -13,20 +13,21 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@Table(name = "users")
-public class User {
+@Table(name = "authorities")
+public class Authorities {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String firstName;
-    private String lastName;
     private String username;
-    private String password;
-    private String phone;
     @Enumerated(EnumType.STRING)
+    @Column(name = "authority")
     private Role role;
-    private boolean enabled;
-    private String image;
+    @OneToOne
+    private User user;
 
-
+    public Authorities(String username, Role role, User user) {
+        this.username = username;
+        this.role = role;
+        this.user = user;
+    }
 }
