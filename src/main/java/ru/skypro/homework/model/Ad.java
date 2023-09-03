@@ -13,7 +13,7 @@ public class Ad {
     private Integer pk;
     @ManyToOne
     //id автора объявления
-    private User author;
+    private User user;
 
     //ссылка на картинку объявления
     private String image;
