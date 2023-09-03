@@ -8,6 +8,9 @@ import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.service.AdsService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class AdsServiceImpl implements AdsService {
 
@@ -19,7 +22,8 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public AdsDto getAllAds() {
-        return null;
+        List<Ad> adList = adRepository.findAll();
+        return new AdsDto().fromAdsList(adList);
     }
 
     @Override

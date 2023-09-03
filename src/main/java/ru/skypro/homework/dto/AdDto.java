@@ -8,6 +8,9 @@ import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.repository.UserRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode

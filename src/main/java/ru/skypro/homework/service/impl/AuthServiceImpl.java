@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Register;
+import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.model.Authorities;
 import ru.skypro.homework.model.User;
@@ -45,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
         UserDto userDto =new UserDto();
         userDto.setUsername(register.getUsername());
         userDto.setPassword(encoder.encode(register.getPassword()));
-        userDto.setRole(String.valueOf(register.getRole()));
+        userDto.setRole(String.valueOf(Role.USER));
         userDto.setFirstName(register.getFirstName());
         userDto.setLastName(register.getLastName());
         userDto.setPhone(register.getPhone());
