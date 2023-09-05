@@ -5,9 +5,8 @@ import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.dto.CreateOrUpdateAdDto;
 import ru.skypro.homework.model.Ad;
 
-public interface AdsService {
+public interface AdsService { // одного метода не хватает - дописать
     AdsDto getAllAds();
-    Ad getAdsById(Integer id);
     AdDto createAds(CreateOrUpdateAdDto createOrUpdateAdDto);
     AdDto getAdById(Integer id);
     void removeAd(Integer id);

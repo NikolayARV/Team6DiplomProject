@@ -10,6 +10,7 @@ import ru.skypro.homework.service.AdsService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AdsServiceImpl implements AdsService {
@@ -27,32 +28,49 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public Ad getAdsById(Integer id) {
-        return null;
-    }
-
-    @Override
     public AdDto createAds(CreateOrUpdateAdDto createOrUpdateAdDto) {
-        return null;
+        Ad newAd = new Ad();
     }
 
     @Override
     public AdDto getAdById(Integer id) {
-        return null;
+        Ad preResult = new Ad();
+        List<Ad> adList = adRepository.findAll();
+        for (Ad ad: adList) {
+            if (Objects.equals(ad.getPk(), id)){
+                preResult = ad;
+            }
+        }
+        return AdDto.fromAd(preResult); //уточнить что будет, если не найдет
     }
 
     @Override
     public void removeAd(Integer id) {
-
+        List<Ad> adList = adRepository.findAll();
+        for (Ad ad: adList) {
+            if (Objects.equals(ad.getPk(), id)){
+                adRepository.deleteById(id);
+            }
+        }
     }
 
     @Override
     public AdDto updateAdById(Integer id, CreateOrUpdateAdDto createOrUpdateAdDto) {
-        return null;
+        Ad oldAd = new Ad();
+        List<Ad> adList = adRepository.findAll();
+        for (Ad ad: adList) {
+            if (Objects.equals(ad.getPk(), id)) {
+                ad.setTitle(createOrUpdateAdDto.getTitle());
+                ad.setPrice(createOrUpdateAdDto.getPrice());
+                ad.setDescription(createOrUpdateAdDto.getDescription());
+                oldAd = ad;
+            }
+        }
+        return AdDto.fromAd(oldAd);
     }
 
     @Override
     public AdsDto getAllAdsForUser(String userName) {
-        return null;
+
     }
 }

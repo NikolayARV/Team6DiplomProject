@@ -10,17 +10,17 @@ import java.math.BigInteger;
 public class Ad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer pk;
+    private Integer pk; //id объявления
     @ManyToOne
-    //id автора объявления
-    private User user;
-
+    private User user; //id автора объявления
     //ссылка на картинку объявления
     private String image;
     //цена объявления
     private Integer price;
     //заголовок объявления
     private String title;
+    // описание
+    private String description;
 
 
 }
