@@ -12,18 +12,19 @@ import ru.skypro.homework.model.User;
 @Data
 public class UserDto {
     private Integer id; // ($int32)
-    private String password;
-    private String username; //логин пользователя
+    private String email; //логин пользователя
     private String firstName; //имя пользователя
     private String lastName; //фамилия пользователя
     private String phone; //телефон пользователя
     private String role; //роль пользователя
     private String image; // ссылка на аватар пользователя
+    private String password;
 
     public static UserDto fromUser(User user) {
+
         UserDto dto = new UserDto();
         dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getUsername());
         dto.setPassword(user.getPassword());
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());
@@ -38,7 +39,7 @@ public class UserDto {
     public User toUser() {
         User user = new User();
         user.setId(this.getId());
-        user.setUsername(this.getUsername());
+        user.setUsername(this.getEmail());
         user.setPassword(this.getPassword());
         user.setFirstName(this.getFirstName());
         user.setLastName(this.getLastName());
