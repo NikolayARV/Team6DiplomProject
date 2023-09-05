@@ -38,4 +38,5 @@ create table authorities (
 
 );
 create unique index ix_auth_username on authorities (username,authority);
-
+-- changeset nrazenkov:3
+alter table ad add description varchar(255);
