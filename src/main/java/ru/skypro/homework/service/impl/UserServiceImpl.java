@@ -2,6 +2,8 @@ package ru.skypro.homework.service.impl;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
@@ -11,35 +13,57 @@ import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.UserService;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder encoder;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
+        this.encoder = encoder;
     }
 
 
     @Override
-    public void updatePassword(String email, NewPasswordDto newPasswordDto) {
-       /** Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        UserDto.fromUser(userRepository.findByUsername(username));
-        */
+    public void updatePassword(String username, NewPasswordDto newPasswordDto) {
+
+        UserDto userDto = UserDto.fromUser(userRepository.findUserByUsername(username).orElseThrow(NoSuchElementException::new));
+
+        String encryptedPassword = userDto.getPassword();
+        if (encoder.matches(newPasswordDto.getCurrentPassword(), encryptedPassword)) {
+            userDto.setPassword(encoder.encode(newPasswordDto.getNewPassword()));
+            userRepository.save(userDto.toUser());
+        } else {
+            throw new NoSuchElementException("User inputs wrong current password");
+        }
     }
 
     @Override
     public UserDto getUserInformation(String email) {
-        return null;
+
+        return UserDto.fromUser(userRepository.findUserByUsername(email).orElseThrow(NoSuchElementException::new));
     }
 
     @Override
     public UserDto updateUser(String email, UpdateUserDto updateUser) {
-        return null;
+        User user = userRepository.getUserByUsername(email);
+        user.setFirstName(updateUser.getFirstName());
+        user.setLastName(updateUser.getLastName());
+        user.setPhone(updateUser.getPhone());
+        userRepository.save(user);
+        return UserDto.fromUser(user);
     }
 
     @Override
     public UserDto updateUserAvatar(String email, MultipartFile file) {
         return null;
+    }
+
+    @Override
+    public User getUser(String username) {
+        return userRepository.getUserByUsername(username);
     }
 }
