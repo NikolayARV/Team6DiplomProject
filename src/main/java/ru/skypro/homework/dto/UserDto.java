@@ -29,7 +29,7 @@ public class UserDto {
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());
         dto.setPhone(user.getPhone());
-        dto.setRole(user.getRole().toString());
+        dto.setRole(user.getRole());
         dto.setImage(user.getImage());
 
         return dto;
@@ -44,7 +44,7 @@ public class UserDto {
         user.setFirstName(this.getFirstName());
         user.setLastName(this.getLastName());
         user.setPhone(this.getPhone());
-        user.setRole(Role.valueOf(this.getRole()));
+        user.setRole(this.getRole());
         user.setImage(this.getImage());
 
         return user;
