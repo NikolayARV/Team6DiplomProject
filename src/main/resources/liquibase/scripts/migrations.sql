@@ -38,3 +38,5 @@ create table if not exists authorities (
 
 );
 create unique index ix_auth_username on authorities (username,authority);
+-- changeset nrazenkov:4
+alter table authorities drop column user_id;

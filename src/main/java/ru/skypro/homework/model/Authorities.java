@@ -22,12 +22,11 @@ public class Authorities {
     @Enumerated(EnumType.STRING)
     @Column(name = "authority")
     private Role role;
-    @OneToOne
-    private User user;
+
 
     public Authorities(String username, Role role, User user) {
         this.username = username;
         this.role = role;
-        this.user = user;
+
     }
 }
