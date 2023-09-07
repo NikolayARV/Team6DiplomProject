@@ -13,14 +13,10 @@ public class Ad {
     private Integer pk; //id объявления
     @ManyToOne
     private User user; //id автора объявления
-    //ссылка на картинку объявления
-    private String image;
-    //цена объявления
-    private Integer price;
-    //заголовок объявления
-    private String title;
-    // описание
-    private String description;
+    private String image;//ссылка на картинку объявления
+    private Integer price;//цена объявления
+    private String title;//заголовок объявления
+    private String description;// описание
 
 
 }

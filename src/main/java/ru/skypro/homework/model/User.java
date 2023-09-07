@@ -20,7 +20,7 @@ public class User {
     private Integer id;
     private String firstName;
     private String lastName;
-    private String username;
+    private String userName;
     private String password;
     private String phone;
     @Enumerated(EnumType.STRING)

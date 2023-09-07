@@ -26,7 +26,7 @@ public class UserController {
     @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody NewPasswordDto newPasswordDto, Authentication authentication) {
 org.springframework.security.core.Authentication authentication1 = SecurityContextHolder.getContext().getAuthentication();
-        userService.updatePassword(authentication1.getName(), newPasswordDto);
+        userService.updatePassword(newPasswordDto);
 
         return ResponseEntity.ok().build();
 

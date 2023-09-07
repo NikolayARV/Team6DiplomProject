@@ -10,9 +10,7 @@ import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AdsService;
-
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class AdsServiceImpl implements AdsService {
@@ -36,19 +34,17 @@ public class AdsServiceImpl implements AdsService {
         Ad newAd = new Ad();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-
         newAd.setTitle(createOrUpdateAdDto.getTitle());
         newAd.setPrice(createOrUpdateAdDto.getPrice());
         newAd.setDescription(createOrUpdateAdDto.getDescription());
-        newAd.setUser(userRepository.findByUsername(username));
+        newAd.setUser(userRepository.findByUserName(username));
         adRepository.save(newAd);
         return AdDto.fromAd(newAd);
     }
 
     @Override
     public AdDto getAdById(Integer id) {
-
-        return AdDto.fromAd(adRepository.findByPk(id)); //уточнить что будет, если не найдет
+        return AdDto.fromAd(adRepository.findByPk(id));
     }
 
     @Override
@@ -64,12 +60,20 @@ public class AdsServiceImpl implements AdsService {
         oldAd.setDescription(createOrUpdateAdDto.getDescription());
         oldAd.setUser(oldAd.getUser());
         adRepository.save(oldAd);
-
         return AdDto.fromAd(oldAd);
     }
 
     @Override
     public AdsDto getAllAdsForUser(String userName) {
-        return null;
+        List<Ad> userAdList = adRepository.findAdsByUser_UserNameContains(userName);
+        return new AdsDto().fromAdsList(userAdList);
+    }
+
+    @Override
+    public AdDto updateImageById(Integer id, String image) {
+        Ad oldAd = adRepository.findByPk(id);
+        oldAd.setImage(image);
+        adRepository.save(oldAd);
+        return AdDto.fromAd(oldAd);
     }
 }
