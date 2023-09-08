@@ -11,6 +11,7 @@ import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AdsService;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class AdsServiceImpl implements AdsService {
@@ -37,7 +38,7 @@ public class AdsServiceImpl implements AdsService {
         newAd.setTitle(createOrUpdateAdDto.getTitle());
         newAd.setPrice(createOrUpdateAdDto.getPrice());
         newAd.setDescription(createOrUpdateAdDto.getDescription());
-        newAd.setUser(userRepository.findByUserName(username));
+        newAd.setUser(userRepository.findUserByUsername(username).orElseThrow(NoSuchElementException::new));
         adRepository.save(newAd);
         return AdDto.fromAd(newAd);
     }
@@ -65,7 +66,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public AdsDto getAllAdsForUser(String userName) {
-        List<Ad> userAdList = adRepository.findAdsByUser_UserNameContains(userName);
+        List<Ad> userAdList = adRepository.findAdsByUser_UsernameContains(userName);
         return new AdsDto().fromAdsList(userAdList);
     }
 
