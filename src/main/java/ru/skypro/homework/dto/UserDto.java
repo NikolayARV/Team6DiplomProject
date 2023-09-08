@@ -19,6 +19,7 @@ public class UserDto {
     private String role; //роль пользователя
     private String image; // ссылка на аватар пользователя
     private String password;
+    private boolean enabled;
 
 
     public static UserDto fromUser(User user) {
@@ -32,6 +33,7 @@ public class UserDto {
         dto.setPhone(user.getPhone());
         dto.setRole(user.getRole());
         dto.setImage(user.getImage());
+        dto.setEnabled(user.isEnabled());
         return dto;
     }
 
@@ -46,6 +48,7 @@ public class UserDto {
         user.setPhone(this.getPhone());
         user.setRole(this.getRole());
         user.setImage(this.getImage());
+        user.setEnabled(this.isEnabled());
         return user;
     }
 }

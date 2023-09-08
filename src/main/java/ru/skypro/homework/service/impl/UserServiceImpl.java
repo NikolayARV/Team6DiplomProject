@@ -2,8 +2,8 @@ package ru.skypro.homework.service.impl;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UpdateUserDto;
@@ -13,16 +13,17 @@ import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.UserService;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
 
+
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.encoder = encoder;
+
     }
 
 
@@ -34,6 +35,7 @@ public class UserServiceImpl implements UserService {
         String encryptedPassword = userDto.getPassword();
         if (encoder.matches(newPasswordDto.getCurrentPassword(), encryptedPassword)) {
             userDto.setPassword(encoder.encode(newPasswordDto.getNewPassword()));
+
             userRepository.save(userDto.toUser());
         } else {
             throw new NoSuchElementException("User inputs wrong current password");
@@ -61,9 +63,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUserAvatar(String avatar) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        (userRepository.findByUserName(authentication.getName())).setImage(avatar);
-        User newAvatarUser = userRepository.findByUserName(authentication.getName());
-        return new UserDto().fromUser(newAvatarUser);
+        UserDto userDto = UserDto.fromUser(userRepository.findUserByUsername(authentication.getName()).orElseThrow(NoSuchElementException::new));
+        userDto.setImage(avatar);
+        userRepository.save(userDto.toUser());
+
+        return userDto;
     }
 
     @Override
