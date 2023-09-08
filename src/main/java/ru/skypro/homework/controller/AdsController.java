@@ -33,8 +33,8 @@ public class AdsController {
     }
     @GetMapping("{id}")
     public ResponseEntity<?> adDto(@PathVariable Integer id) {
-//запрос в сервис
-        return ResponseEntity.ok().build();
+
+        return ResponseEntity.ok(adsService.getAdById(id));
     }
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteAd(@PathVariable Integer id) {

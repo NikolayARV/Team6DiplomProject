@@ -20,6 +20,7 @@ public class UserDto {
     private String image; // ссылка на аватар пользователя
     private String password;
 
+
     public static UserDto fromUser(User user) {
 
         UserDto dto = new UserDto();
@@ -31,7 +32,6 @@ public class UserDto {
         dto.setPhone(user.getPhone());
         dto.setRole(user.getRole());
         dto.setImage(user.getImage());
-
         return dto;
     }
 
@@ -46,7 +46,6 @@ public class UserDto {
         user.setPhone(this.getPhone());
         user.setRole(this.getRole());
         user.setImage(this.getImage());
-
         return user;
     }
 }

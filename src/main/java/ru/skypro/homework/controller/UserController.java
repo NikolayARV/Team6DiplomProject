@@ -41,6 +41,7 @@ public class UserController {
         userService.updatePassword(
                 authentication.getName(),
                 newPasswordDto);
+
         return ResponseEntity.ok().build();
 
     }

@@ -5,7 +5,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
@@ -39,6 +38,7 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new NoSuchElementException("User inputs wrong current password");
         }
+
     }
 
     @Override
@@ -55,11 +55,15 @@ public class UserServiceImpl implements UserService {
         user.setPhone(updateUser.getPhone());
         userRepository.save(user);
         return UserDto.fromUser(user);
+
     }
 
     @Override
-    public UserDto updateUserAvatar(String email, MultipartFile file) {
-        return null;
+    public UserDto updateUserAvatar(String avatar) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        (userRepository.findByUserName(authentication.getName())).setImage(avatar);
+        User newAvatarUser = userRepository.findByUserName(authentication.getName());
+        return new UserDto().fromUser(newAvatarUser);
     }
 
     @Override

@@ -48,6 +48,7 @@ public class AuthServiceImpl implements AuthService {
         if (manager.userExists(register.getUsername())) {
             return false;
         }
+
         UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
                 .password(encoder.encode(register.getPassword()))
                 .username(register.getUsername())
@@ -58,7 +59,6 @@ public class AuthServiceImpl implements AuthService {
 
 
         UpdateUserDto userDto = new UpdateUserDto();
-
         userDto.setFirstName(register.getFirstName());
         userDto.setLastName(register.getLastName());
         userDto.setPhone(register.getPhone());
