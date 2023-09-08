@@ -11,7 +11,7 @@ public interface UserService {
 
     void updatePassword(String username, NewPasswordDto newPasswordDto);
     UserDto getUserInformation(String email);
-    UserDto updateUser(UpdateUserDto updateUser);
+    UserDto updateUser(String email, UpdateUserDto updateUser);
     UserDto updateUserAvatar (String avatar);
 
     User getUser(String username);
