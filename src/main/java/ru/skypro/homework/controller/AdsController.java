@@ -22,7 +22,7 @@ public class AdsController {
 
     @GetMapping
     public ResponseEntity<?> ads() {
-//запрос в сервис
+adsService.getAllAds();
         return ResponseEntity.ok().build();
     }
 
