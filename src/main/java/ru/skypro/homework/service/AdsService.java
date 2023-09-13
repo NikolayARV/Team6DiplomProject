@@ -8,7 +8,7 @@ import ru.skypro.homework.model.Ad;
 
 public interface AdsService {
     AdsDto getAllAds();
-    AdDto createAds(CreateOrUpdateAdDto createOrUpdateAdDto);
+    AdDto createAds(CreateOrUpdateAdDto createOrUpdateAdDto, MultipartFile image);
     AdDto getAdById(Integer id);
     void removeAd(Integer id);
     AdDto updateAdById (Integer id, CreateOrUpdateAdDto createOrUpdateAdDto);
