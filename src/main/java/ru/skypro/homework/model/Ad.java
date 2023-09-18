@@ -3,7 +3,7 @@ package ru.skypro.homework.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.math.BigInteger;
+import java.util.Collection;
 
 @Data
 @Entity
@@ -12,7 +12,7 @@ public class Ad {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pk; //id объявления
     @ManyToOne
-    private User user; //id автора объявления
+    private User user; //id автора объявления(имя)
     private String image;//ссылка на картинку объявления
     private Integer price;//цена объявления
     private String title;//заголовок объявления

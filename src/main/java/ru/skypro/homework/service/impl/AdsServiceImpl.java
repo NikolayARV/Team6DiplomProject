@@ -50,7 +50,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public void removeAd(Integer id) {
-       adRepository.deleteById(id);
+       adRepository.deleteById(id);//прописать удаление комментариев
     }
 
     @Override
