@@ -44,4 +44,9 @@ alter table ad add description varchar(255);
 
 -- changeset nrazenkov:4
 alter table authorities drop column user_id;
+-- changeset nrazenkov:5
+create table if not exists image(
+    id varchar(255) primary key,
+    image bytea
+);
 

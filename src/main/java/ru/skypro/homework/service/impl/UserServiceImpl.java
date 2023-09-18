@@ -1,15 +1,14 @@
 package ru.skypro.homework.service.impl;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.UserRepository;
+import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UserService;
 
 import java.util.NoSuchElementException;
@@ -18,12 +17,14 @@ import java.util.NoSuchElementException;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
+    private final ImageService imageService;
 
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder encoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder encoder, ImageService imageService) {
         this.userRepository = userRepository;
         this.encoder = encoder;
 
+        this.imageService = imageService;
     }
 
 
@@ -61,13 +62,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUserAvatar(String avatar) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDto userDto = UserDto.fromUser(userRepository.findUserByUsername(authentication.getName()).orElseThrow(NoSuchElementException::new));
+    public void updateUserAvatar(String username, MultipartFile image) {
+        String avatar = imageService.uploadImage(image);
+        UserDto userDto = UserDto.fromUser(userRepository
+                .findUserByUsername(username)
+                .orElseThrow(NoSuchElementException::new));
         userDto.setImage(avatar);
         userRepository.save(userDto.toUser());
 
-        return userDto;
+
+    }
+
+    @Override
+    public byte[] getAvatar(String username) {
+        UserDto userDto = UserDto.fromUser(userRepository
+                .findUserByUsername(username)
+                .orElseThrow(NoSuchElementException::new));
+        return imageService.getImage(userDto.getImage());
     }
 
     @Override

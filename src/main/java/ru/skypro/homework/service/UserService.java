@@ -12,7 +12,9 @@ public interface UserService {
     void updatePassword(String username, NewPasswordDto newPasswordDto);
     UserDto getUserInformation(String email);
     UserDto updateUser(String email, UpdateUserDto updateUser);
-    UserDto updateUserAvatar (String avatar);
+    void updateUserAvatar (String username, MultipartFile avatar);
+
+    byte[] getAvatar(String username);
 
     User getUser(String username);
 }
