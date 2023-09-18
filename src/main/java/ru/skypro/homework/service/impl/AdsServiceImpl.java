@@ -1,14 +1,19 @@
 package ru.skypro.homework.service.impl;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import ru.skypro.homework.dto.AdDto;
 import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.dto.CreateOrUpdateAdDto;
+import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.model.Ad;
+import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.AdRepository;
+import ru.skypro.homework.repository.AuthoritiesRepository;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AdsService;
 import ru.skypro.homework.service.ImageService;
@@ -22,11 +27,13 @@ public class AdsServiceImpl implements AdsService {
     private AdRepository adRepository;
     private final UserRepository userRepository;
     private final ImageService imageService;
+    private final AuthoritiesRepository authoritiesRepository;
 
-    public AdsServiceImpl(AdRepository adRepository, UserRepository userRepository, ImageService imageService) {
+    public AdsServiceImpl(AdRepository adRepository, UserRepository userRepository, ImageService imageService, AuthoritiesRepository authoritiesRepository) {
         this.adRepository = adRepository;
         this.userRepository = userRepository;
         this.imageService = imageService;
+        this.authoritiesRepository = authoritiesRepository;
     }
 
     @Override
@@ -57,21 +64,32 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public void removeAd(Integer id) {
-       adRepository.deleteById(id);
+    public void removeAd(Integer id, String username) {
+        User user = userRepository.findUserByUsername(username).orElseThrow(NoSuchElementException::new);
+        Ad ad = adRepository.findByPk(id);
+        Role role = authoritiesRepository.findByUsername(username).getRole();
+        if (user.equals(ad.getUser()) || role.equals(Role.ADMIN)) {
+            adRepository.deleteById(id);
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
     }
 
     @Override
-    public AdDto updateAdById(Integer id, CreateOrUpdateAdDto createOrUpdateAdDto) {
+    public AdDto updateAdById(Integer id, CreateOrUpdateAdDto createOrUpdateAdDto, String username) {
+        User user = userRepository.findUserByUsername(username).orElseThrow(NoSuchElementException::new);
         Ad oldAd = adRepository.findByPk(id);
-        oldAd.setTitle(createOrUpdateAdDto.getTitle());
-        oldAd.setPrice(createOrUpdateAdDto.getPrice());
-        oldAd.setDescription(createOrUpdateAdDto.getDescription());
-        oldAd.setUser(oldAd.getUser());
-        adRepository.save(oldAd);
+        Role role = authoritiesRepository.findByUsername(username).getRole();
+        if (user.equals(oldAd.getUser()) || role.equals(Role.ADMIN)) {
+            oldAd.setTitle(createOrUpdateAdDto.getTitle());
+            oldAd.setPrice(createOrUpdateAdDto.getPrice());
+            oldAd.setDescription(createOrUpdateAdDto.getDescription());
+            oldAd.setUser(oldAd.getUser());
+            adRepository.save(oldAd);
+        }
         return AdDto.fromAd(oldAd);
     }
-
     @Override
     public AdsDto getAllAdsForUser(String userName) {
         List<Ad> userAdList = adRepository.findAdsByUser_UsernameContains(userName);
@@ -79,10 +97,11 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public AdDto updateImageById(Integer id, String image) {
+    public boolean updateImageById(Integer id, MultipartFile image) {
         Ad oldAd = adRepository.findByPk(id);
-        oldAd.setImage(image);
+        String imageId = imageService.uploadImage(image);
+        oldAd.setImage(imageId);
         adRepository.save(oldAd);
-        return AdDto.fromAd(oldAd);
+        return true;
     }
 }

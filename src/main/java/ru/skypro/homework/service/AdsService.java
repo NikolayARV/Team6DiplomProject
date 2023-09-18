@@ -10,8 +10,8 @@ public interface AdsService {
     AdsDto getAllAds();
     AdDto createAds(CreateOrUpdateAdDto createOrUpdateAdDto, MultipartFile image);
     AdDto getAdById(Integer id);
-    void removeAd(Integer id);
-    AdDto updateAdById (Integer id, CreateOrUpdateAdDto createOrUpdateAdDto);
+    void removeAd(Integer id,  String username);
+    AdDto updateAdById (Integer id, CreateOrUpdateAdDto createOrUpdateAdDto, String username);
     AdsDto getAllAdsForUser(String userName);
-    AdDto updateImageById (Integer id, String image);
+    boolean updateImageById (Integer id, MultipartFile image);
 }
