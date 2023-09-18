@@ -7,8 +7,6 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Data
-public class Login {
-
-    private String username; //minLength: 8, maxLength: 16
-    private String password; //minLength: 4, maxLength: 32
+public class CreateOrUpdateCommentDto {
+    private String text; //minLength: 8, maxLength: 64 текст комментария
 }
