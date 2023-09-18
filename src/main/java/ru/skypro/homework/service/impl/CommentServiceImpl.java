@@ -41,15 +41,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentsDto createNewComment(Integer adPk, CreateOrUpdateCommentDto createOrUpdateCommentDto) {//текст
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+    public CommentDto createNewComment(Integer adPk, CreateOrUpdateCommentDto createOrUpdateCommentDto, String username) {//текст
+
+
         Ad ad = adRepository.findByPk(adPk);
         User newUser = userRepository.getUserByUsername(username);
         String date = getCurrentTimeStamp();
-        Comment newComment = new Comment(newUser, ad, (newUser.getImage()), username, date, createOrUpdateCommentDto.getText());
+        Comment newComment = new Comment(newUser, ad, newUser.getImage(), newUser.getFirstName(), date, createOrUpdateCommentDto.getText());
         commentRepository.save(newComment);
-        return getAllCommentsForAdById(adPk);
+        return CommentDto.fromComment(newComment);
         }
 
     @Override

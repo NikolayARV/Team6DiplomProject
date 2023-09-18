@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CommentsDto;
@@ -39,9 +40,9 @@ public class CommentController {
             responseCode = "401",
             description = "для того чтобы оставить комментарий необходимо авторизоваться"
     )
-    public ResponseEntity<CommentsDto> addComment(@PathVariable("id") Integer id,
-                                                  @RequestBody CreateOrUpdateCommentDto comment) {
-        CommentsDto comments = commentService.createNewComment(id, comment);
+    public ResponseEntity<CommentDto> addComment(@PathVariable("id") Integer id,
+                                                  @RequestBody CreateOrUpdateCommentDto comment, Authentication authentication) {
+        CommentDto comments = commentService.createNewComment(id, comment, authentication.getName());
         if (comments == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -86,9 +87,9 @@ public class CommentController {
             responseCode = "403",
             description = "отсутствуют права доступа"
     )
-    public ResponseEntity<?> deleteComment(@PathVariable Integer adPk,
+    public ResponseEntity<?> deleteComment(@PathVariable Integer adsId,
                                            @PathVariable Integer commentId) {
-        commentService.deleteComment(adPk, commentId);
+        commentService.deleteComment(adsId, commentId);
         return ResponseEntity.ok().build();
     }
     @PatchMapping("{adsId}/comments/{commentId}")
