@@ -208,37 +208,5 @@ public class AdsController {
         return ResponseEntity.ok().body(adsService.updateImageById(id, image));
     }
 
-    /**
-     * Контроллеры для комментариев
-     */
-    @GetMapping("{id}/comments")
-    public ResponseEntity<?> comments(@PathVariable Integer id) {
-//запрос в сервис
-        return ResponseEntity.ok().build();
-    }
 
-    @PostMapping("{id}/comments")
-    public ResponseEntity<?> createComment(@RequestBody CreateOrUpdateCommentDto createOrUpdateCommentDto, @PathVariable Integer id) {
-        //запрос в сервис
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("{id}/comments/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable Integer id, @PathVariable Integer commentId) {
-//запрос в сервис
-        return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping("{id}/comments/{commentId}")
-    public ResponseEntity<?> UpdateComment(@PathVariable Integer id,
-                                           @PathVariable Integer commentId,
-                                           @RequestBody CreateOrUpdateAdDto createOrUpdateAdDto) {
-//запрос в сервис
-        return ResponseEntity.ok().build();
-    }
-
-    private ResponseEntity<byte[]> read(String id) {
-        return ResponseEntity.ok(imageService.getImage(id));
-
-    }
 }

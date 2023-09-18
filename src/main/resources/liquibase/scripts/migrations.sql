@@ -49,4 +49,6 @@ create table if not exists image(
     id varchar(255) primary key,
     image bytea
 );
-
+-- changeset nrazenkov:6
+alter table comment drop column created_at;
+alter table comment add created_at varchar(255);
