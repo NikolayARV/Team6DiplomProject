@@ -15,10 +15,11 @@ public class CommentDto {
     private Integer user; // ($int32) id автороа комментария
     private String userImage; // ссылка на аватар автора комментария
     private String userFirstName; // имя создателя комментария
-    private Integer createdAt; //($int32) дата и время создания комментария в миллисекундах с 00:00:00 01.01.1970
+    private String createdAt; //($int32) дата и время создания комментария в миллисекундах с 00:00:00 01.01.1970
     private Integer pk; //($int32) id комментария
     private String text; // текст комментария
     UserRepository userRepository;
+
 
     public static CommentDto fromComment(Comment comment) {
         CommentDto dto = new CommentDto();

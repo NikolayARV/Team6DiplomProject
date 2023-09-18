@@ -64,6 +64,7 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
+
     public void removeAd(Integer id, String username) {
         User user = userRepository.findUserByUsername(username).orElseThrow(NoSuchElementException::new);
         Ad ad = adRepository.findByPk(id);
@@ -73,6 +74,7 @@ public class AdsServiceImpl implements AdsService {
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
+
 
     }
 
