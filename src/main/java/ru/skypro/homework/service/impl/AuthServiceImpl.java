@@ -63,6 +63,7 @@ public class AuthServiceImpl implements AuthService {
         userDto.setLastName(register.getLastName());
         userDto.setPhone(register.getPhone());
 
+
         userService.updateUser(register.getUsername(), userDto);
 
         return true;

@@ -6,10 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import ru.skypro.homework.dto.AdDto;
-import ru.skypro.homework.dto.AdsDto;
-import ru.skypro.homework.dto.CreateOrUpdateAdDto;
-import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.dto.*;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.AdRepository;
@@ -59,15 +56,19 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public AdDto getAdById(Integer id) {
-
-        return AdDto.fromAd(adRepository.findByPk(id));
+        Ad ad = adRepository.findByPk(id).orElseThrow(NoSuchElementException::new);
+        return AdDto.fromAd(ad);
     }
-
+    @Override
+    public FullAdDto getFullAdById(Integer id) {
+        Ad ad = adRepository.findByPk(id).orElseThrow(NoSuchElementException::new);
+        return FullAdDto.fromAd(ad);
+    }
     @Override
 
     public void removeAd(Integer id, String username) {
         User user = userRepository.findUserByUsername(username).orElseThrow(NoSuchElementException::new);
-        Ad ad = adRepository.findByPk(id);
+        Ad ad = adRepository.findByPk(id).orElseThrow(NoSuchElementException::new);
         Role role = authoritiesRepository.findByUsername(username).getRole();
         if (user.equals(ad.getUser()) || role.equals(Role.ADMIN)) {
             adRepository.deleteById(id);
@@ -81,7 +82,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public AdDto updateAdById(Integer id, CreateOrUpdateAdDto createOrUpdateAdDto, String username) {
         User user = userRepository.findUserByUsername(username).orElseThrow(NoSuchElementException::new);
-        Ad oldAd = adRepository.findByPk(id);
+        Ad oldAd = adRepository.findByPk(id).orElseThrow(NoSuchElementException::new);
         Role role = authoritiesRepository.findByUsername(username).getRole();
         if (user.equals(oldAd.getUser()) || role.equals(Role.ADMIN)) {
             oldAd.setTitle(createOrUpdateAdDto.getTitle());
@@ -92,6 +93,7 @@ public class AdsServiceImpl implements AdsService {
         }
         return AdDto.fromAd(oldAd);
     }
+
     @Override
     public AdsDto getAllAdsForUser(String userName) {
         List<Ad> userAdList = adRepository.findAdsByUser_UsernameContains(userName);
@@ -100,7 +102,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public boolean updateImageById(Integer id, MultipartFile image) {
-        Ad oldAd = adRepository.findByPk(id);
+        Ad oldAd = adRepository.findByPk(id).orElseThrow(NoSuchElementException::new);
         String imageId = imageService.uploadImage(image);
         oldAd.setImage(imageId);
         adRepository.save(oldAd);

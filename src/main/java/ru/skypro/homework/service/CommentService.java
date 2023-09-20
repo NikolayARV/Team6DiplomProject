@@ -8,7 +8,7 @@ import ru.skypro.homework.model.Comment;
 
 public interface CommentService {
     CommentsDto getAllCommentsForAdById(Integer adPk);
-    CommentsDto createNewComment(Integer adPk, CreateOrUpdateCommentDto createOrUpdateCommentDto);
+    CommentDto createNewComment(Integer adPk, CreateOrUpdateCommentDto createOrUpdateCommentDto, String username);
     //CommentDto getComment (Integer adPk, Integer commentId);
     void deleteComment (Integer adPk, Integer commentPk);
     CommentDto updateComment (Integer adPk, Integer commentId, CreateOrUpdateCommentDto createOrUpdateCommentDto);

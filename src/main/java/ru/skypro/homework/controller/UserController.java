@@ -103,6 +103,7 @@ public class UserController {
         userService.updateUserAvatar(authentication.getName(), image);
         return ResponseEntity.ok().build();
     }
+
     @Operation(summary = "getUserAvatar",
             tags = {"Пользователи"})
     @ApiResponses(value = {
@@ -111,8 +112,10 @@ public class UserController {
                     array = @ArraySchema(schema = @Schema(implementation = byte[].class)))),
             @ApiResponse(responseCode = "404", description = "Not Found")})
     @PreAuthorize("isAuthenticated()")
-    @GetMapping(value = "me/{image}", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, "image/*"})
-    public byte[] getImage(@PathVariable String image, Authentication authentication) {
-        return userService.getAvatar(authentication.getName());
+    @GetMapping(value = "/image/{id}", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, "image/*"})
+    public byte[] getImage(@PathVariable("id") String id) {
+        return imageService.getImage(id);
+                //userService.getAvatar(authentication.getName());
     }
+
 }
