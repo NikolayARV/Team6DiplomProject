@@ -41,7 +41,8 @@ public class CommentController {
             description = "для того чтобы оставить комментарий необходимо авторизоваться"
     )
     public ResponseEntity<CommentDto> addComment(@PathVariable("id") Integer id,
-                                                  @RequestBody CreateOrUpdateCommentDto comment, Authentication authentication) {
+                                                  @RequestBody CreateOrUpdateCommentDto comment,
+                                                 Authentication authentication) {
         CommentDto comments = commentService.createNewComment(id, comment, authentication.getName());
         if (comments == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

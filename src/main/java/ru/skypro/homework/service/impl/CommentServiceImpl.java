@@ -21,6 +21,7 @@ import ru.skypro.homework.service.UserService;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Класс - сервис, по работе с комментариями
@@ -41,10 +42,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto createNewComment(Integer adPk, CreateOrUpdateCommentDto createOrUpdateCommentDto, String username) {//текст
+    public CommentDto createNewComment(Integer adPk, CreateOrUpdateCommentDto createOrUpdateCommentDto,
+                                       String username) {//текст
 
 
-        Ad ad = adRepository.findByPk(adPk);
+        Ad ad = adRepository.findByPk(adPk).orElseThrow(NoSuchElementException::new);
         User newUser = userRepository.getUserByUsername(username);
         String date = getCurrentTimeStamp();
         Comment newComment = new Comment(newUser, ad, newUser.getImage(), newUser.getFirstName(), date, createOrUpdateCommentDto.getText());
@@ -56,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
     public void deleteComment(Integer adPk, Integer commentPk) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        Ad ad = adRepository.findByPk(adPk);
+        Ad ad = adRepository.findByPk(adPk).orElseThrow(NoSuchElementException::new);
         if (ad.getUser().getUsername().equals(username)){
             commentRepository.deleteById(commentPk);
         }else {
@@ -69,7 +71,7 @@ public class CommentServiceImpl implements CommentService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         Comment oldComment = commentRepository.findByPk(commentId);
-        Ad ad = adRepository.findByPk(adPk);
+        Ad ad = adRepository.findByPk(adPk).orElseThrow(NoSuchElementException::new);
         if (ad.getUser().getUsername().equals(username)){
             oldComment.setText(createOrUpdateCommentDto.getText());
             commentRepository.save(oldComment);

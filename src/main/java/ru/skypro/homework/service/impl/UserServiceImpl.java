@@ -30,14 +30,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updatePassword(String username, NewPasswordDto newPasswordDto) {
+        User user = userRepository.findUserByUsername(username)
+                .orElseThrow(NoSuchElementException::new);
+        UserDto userDto = UserDto.fromUser(user);
 
-        UserDto userDto = UserDto.fromUser(userRepository.findUserByUsername(username).orElseThrow(NoSuchElementException::new));
-
-        String encryptedPassword = userDto.getPassword();
+        String encryptedPassword = user.getPassword();
         if (encoder.matches(newPasswordDto.getCurrentPassword(), encryptedPassword)) {
-            userDto.setPassword(encoder.encode(newPasswordDto.getNewPassword()));
+            user.setPassword(encoder.encode(newPasswordDto.getNewPassword()));
 
-            userRepository.save(userDto.toUser());
+            userRepository.save(user);
         } else {
             throw new NoSuchElementException("User inputs wrong current password");
         }

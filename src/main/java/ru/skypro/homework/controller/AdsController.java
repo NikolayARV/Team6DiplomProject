@@ -16,17 +16,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.AdDto;
-import ru.skypro.homework.dto.AdsDto;
-import ru.skypro.homework.dto.CreateOrUpdateAdDto;
-import ru.skypro.homework.dto.CreateOrUpdateCommentDto;
+import ru.skypro.homework.dto.*;
 import ru.skypro.homework.service.AdsService;
 import ru.skypro.homework.service.ImageService;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
-//@RequiredArgsConstructor
+
 @RequestMapping("/ads")
 public class AdsController {
     private final AdsService adsService;
@@ -83,17 +80,21 @@ public class AdsController {
             @ApiResponse(responseCode = "200",
                     description = "OK",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = AdDto.class))),
+                            schema = @Schema(implementation = FullAdDto.class))),
             @ApiResponse(responseCode = "401",
                     description = "Unauthorized"),
             @ApiResponse(responseCode = "404",
                     description = "Not Found")})
-    @GetMapping(value = "{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<AdDto> getAdDto(
-            @Parameter(in = ParameterIn.PATH,
-                    description = "pk of ad to process")
-            @PathVariable("id") Integer idAd) {
-        return ResponseEntity.ok(adsService.getAdById(idAd));
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<FullAdDto> getAdDto(
+            @PathVariable Integer id) {
+        log.info("Was invoked get full ad by id = {} method", id);
+        FullAdDto adDto = adsService.getFullAdById(id);
+        if (adDto == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.ok(adDto);
     }
 
     @Operation(
@@ -114,7 +115,7 @@ public class AdsController {
             },
             tags = "Объявления")
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAd(@PathVariable Integer id, Authentication authentication) {
         adsService.removeAd(id, authentication.getName());
         return ResponseEntity.ok().build();
@@ -143,7 +144,7 @@ public class AdsController {
             tags = "Объявления"
     )
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping("{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<AdDto> UpdateAd(@RequestBody CreateOrUpdateAdDto createOrUpdateAdDto,
                                           @PathVariable Integer id, Authentication authentication) {
 
@@ -207,6 +208,20 @@ public class AdsController {
 
         return ResponseEntity.ok().body(adsService.updateImageById(id, image));
     }
-
+    @GetMapping(value = "/image/{id}", produces = {
+            MediaType.IMAGE_PNG_VALUE,
+            MediaType.IMAGE_JPEG_VALUE,
+            MediaType.APPLICATION_OCTET_STREAM_VALUE
+    })
+    @Operation(
+            summary = "Получить картинку объявления",
+            tags = "Объявления",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Not found", content = @Content())
+            })
+    public ResponseEntity<byte[]> getImage(@PathVariable("id") String id) {
+        return ResponseEntity.ok(imageService.getImage(id));
+    }
 
 }

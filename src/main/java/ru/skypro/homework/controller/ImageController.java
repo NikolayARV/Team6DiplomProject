@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.service.ImageService;
-
+/**
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
@@ -33,4 +33,6 @@ public class ImageController {
         return imageService.getImage(id);
         //userService.getAvatar(authentication.getName());
     }
+
 }
+ */
