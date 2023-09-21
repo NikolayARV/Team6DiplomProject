@@ -39,6 +39,10 @@ public class ImageServiceImpl implements ImageService {
         return entity.getImage();
     }
 
+    @Override
+    public void deleteImage(String id) {
+        imageRepository.deleteById(id);
+    }
     private String type(MultipartFile image) {
 
         String type = image.getContentType();

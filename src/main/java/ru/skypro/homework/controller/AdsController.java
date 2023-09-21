@@ -145,10 +145,10 @@ public class AdsController {
     )
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/{id}")
-    public ResponseEntity<AdDto> UpdateAd(@RequestBody CreateOrUpdateAdDto createOrUpdateAdDto,
+    public ResponseEntity<?> UpdateAd(@RequestBody CreateOrUpdateAdDto createOrUpdateAdDto,
                                           @PathVariable Integer id, Authentication authentication) {
 
-        return ResponseEntity.ok(adsService.updateAdById(id, createOrUpdateAdDto, authentication.getName()));
+        return ResponseEntity.ok().body(adsService.updateAdById(id, createOrUpdateAdDto, authentication.getName()));
     }
 
     @Operation(
@@ -208,6 +208,7 @@ public class AdsController {
 
         return ResponseEntity.ok().body(adsService.updateImageById(id, image));
     }
+
     @GetMapping(value = "/image/{id}", produces = {
             MediaType.IMAGE_PNG_VALUE,
             MediaType.IMAGE_JPEG_VALUE,

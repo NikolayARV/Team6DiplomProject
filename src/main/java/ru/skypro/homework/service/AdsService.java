@@ -15,7 +15,7 @@ public interface AdsService {
 
     FullAdDto getFullAdById(Integer id);
     void removeAd(Integer id,  String username);
-    AdDto updateAdById (Integer id, CreateOrUpdateAdDto createOrUpdateAdDto, String username);
+    boolean updateAdById (Integer id, CreateOrUpdateAdDto createOrUpdateAdDto, String username);
     AdsDto getAllAdsForUser(String userName);
     boolean updateImageById (Integer id, MultipartFile image);
 }

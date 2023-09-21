@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface AdRepository extends JpaRepository<Ad, Integer> {
     Optional<Ad> findByPk(Integer pk);
-    List<Ad> findAdsByUser_UsernameContains(String userName);
+    Optional<List<Ad>> findAdsByUser_UsernameContains(String userName);
 
 }

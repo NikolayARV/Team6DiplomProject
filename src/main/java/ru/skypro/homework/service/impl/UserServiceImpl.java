@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     public void updatePassword(String username, NewPasswordDto newPasswordDto) {
         User user = userRepository.findUserByUsername(username)
                 .orElseThrow(NoSuchElementException::new);
-        UserDto userDto = UserDto.fromUser(user);
+
 
         String encryptedPassword = user.getPassword();
         if (encoder.matches(newPasswordDto.getCurrentPassword(), encryptedPassword)) {
@@ -53,7 +53,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(String email, UpdateUserDto updateUser) {
-        User user = userRepository.getUserByUsername(email);
+        User user = userRepository.findUserByUsername(email)
+                .orElseThrow(NoSuchElementException::new);
         user.setFirstName(updateUser.getFirstName());
         user.setLastName(updateUser.getLastName());
         user.setPhone(updateUser.getPhone());
@@ -65,11 +66,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserAvatar(String username, MultipartFile image) {
         String avatar = imageService.uploadImage(image);
-        UserDto userDto = UserDto.fromUser(userRepository
+        User user = userRepository
                 .findUserByUsername(username)
-                .orElseThrow(NoSuchElementException::new));
-        userDto.setImage(avatar);
-        userRepository.save(userDto.toUser());
+                .orElseThrow(NoSuchElementException::new);
+        user.setImage(avatar);
+        userRepository.save(user);
 
 
     }
@@ -84,6 +85,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(String username) {
-        return userRepository.getUserByUsername(username);
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(NoSuchElementException::new);
     }
 }
