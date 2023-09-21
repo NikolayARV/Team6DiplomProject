@@ -3,6 +3,8 @@ package ru.skypro.homework.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -23,13 +25,13 @@ public class Comment {
     //имя создателя комментария
     private String userFirstName;
     //дата и время создания комментария в миллисекундах с 00:00:00 01.01.1970
-    private String createdAt; //Почему в openapi стоит Integer????
+    private Instant createdAt; //Почему в openapi стоит Integer????
     //текст комментария
     private String text;
 
     public Comment(){};
 
-    public Comment(User user, Ad ad, String userImage, String userFirstName, String createdAt, String text) {
+    public Comment(User user, Ad ad, String userImage, String userFirstName, Instant createdAt, String text) {
         this.user = user;
         this.ad = ad;
         this.userImage = userImage;

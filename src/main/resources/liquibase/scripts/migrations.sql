@@ -51,4 +51,4 @@ create table if not exists image(
 );
 -- changeset nrazenkov:6
 alter table comment drop column created_at;
-alter table comment add created_at varchar(255);
+alter table comment add created_at timestamp;
