@@ -28,15 +28,22 @@ import java.util.NoSuchElementException;
  */
 @Service
 public class CommentServiceImpl implements CommentService {
-    private AdsService adsService;
-    private AdRepository adRepository;
-    private CommentRepository commentRepository;
-    private UserService userService;
-    private UserRepository userRepository;
+    private final AdRepository adRepository;
+    private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
+
+    public CommentServiceImpl(AdRepository adRepository,
+                              CommentRepository commentRepository,
+                              UserRepository userRepository) {
+
+        this.adRepository = adRepository;
+        this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public CommentsDto getAllCommentsForAdById(Integer adPk) {
-        List<Comment> comm = commentRepository.findAllByAd_Pk(adPk);
+        List<Comment> comm = commentRepository.findCommentsByAd_Pk(adPk).orElseThrow(NoSuchElementException::new);
         List<CommentDto> commDto = new CommentsDto().fromCommentsList(comm);
         return new CommentsDto(commDto.size(), commDto);
     }
@@ -47,21 +54,22 @@ public class CommentServiceImpl implements CommentService {
 
 
         Ad ad = adRepository.findByPk(adPk).orElseThrow(NoSuchElementException::new);
-        User newUser = userRepository.getUserByUsername(username);
+        User newUser = userRepository.findUserByUsername(username)
+                .orElseThrow(NoSuchElementException::new);
         String date = getCurrentTimeStamp();
         Comment newComment = new Comment(newUser, ad, newUser.getImage(), newUser.getFirstName(), date, createOrUpdateCommentDto.getText());
         commentRepository.save(newComment);
         return CommentDto.fromComment(newComment);
-        }
+    }
 
     @Override
     public void deleteComment(Integer adPk, Integer commentPk) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         Ad ad = adRepository.findByPk(adPk).orElseThrow(NoSuchElementException::new);
-        if (ad.getUser().getUsername().equals(username)){
+        if (ad.getUser().getUsername().equals(username)) {
             commentRepository.deleteById(commentPk);
-        }else {
+        } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
     }
@@ -70,16 +78,17 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto updateComment(Integer adPk, Integer commentId, CreateOrUpdateCommentDto createOrUpdateCommentDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        Comment oldComment = commentRepository.findByPk(commentId);
+        Comment oldComment = commentRepository.findByPk(commentId).get();
         Ad ad = adRepository.findByPk(adPk).orElseThrow(NoSuchElementException::new);
-        if (ad.getUser().getUsername().equals(username)){
+        if (ad.getUser().getUsername().equals(username)) {
             oldComment.setText(createOrUpdateCommentDto.getText());
             commentRepository.save(oldComment);
-        }else {
+        } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         return CommentDto.fromComment(oldComment);
     }
+
     public String getCurrentTimeStamp() {
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Date now = new Date();
