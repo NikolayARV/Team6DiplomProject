@@ -115,7 +115,7 @@ public class UserController {
     @GetMapping(value = "/image/{id}", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, "image/*"})
     public byte[] getImage(@PathVariable("id") String id) {
         return imageService.getImage(id);
-                //userService.getAvatar(authentication.getName());
+
     }
 
 }
