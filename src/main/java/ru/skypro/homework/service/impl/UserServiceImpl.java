@@ -75,17 +75,4 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public byte[] getAvatar(String username) {
-        UserDto userDto = UserDto.fromUser(userRepository
-                .findUserByUsername(username)
-                .orElseThrow(NoSuchElementException::new));
-        return imageService.getImage(userDto.getImage());
-    }
-
-    @Override
-    public User getUser(String username) {
-        return userRepository.findUserByUsername(username)
-                .orElseThrow(NoSuchElementException::new);
-    }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CommentsDto;
 import ru.skypro.homework.dto.CreateOrUpdateCommentDto;
+import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.User;
@@ -19,6 +20,8 @@ import ru.skypro.homework.service.CommentService;
 import ru.skypro.homework.service.UserService;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -50,24 +53,28 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto createNewComment(Integer adPk, CreateOrUpdateCommentDto createOrUpdateCommentDto,
-                                       String username) {//текст
+                                       String username) {
 
 
         Ad ad = adRepository.findByPk(adPk).orElseThrow(NoSuchElementException::new);
         User newUser = userRepository.findUserByUsername(username)
                 .orElseThrow(NoSuchElementException::new);
-        String date = getCurrentTimeStamp();
-        Comment newComment = new Comment(newUser, ad, newUser.getImage(), newUser.getFirstName(), date, createOrUpdateCommentDto.getText());
+        //Integer date = getCurrentTimeStamp();
+        Comment newComment = new Comment(newUser, ad, newUser.getImage(), newUser.getFirstName(), Instant.now(), createOrUpdateCommentDto.getText());
         commentRepository.save(newComment);
         return CommentDto.fromComment(newComment);
     }
-
+    //if (user.equals(oldAd.getUser()) || user.getRole().equals(Role.ADMIN.name()))
     @Override
     public void deleteComment(Integer adPk, Integer commentPk) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         Ad ad = adRepository.findByPk(adPk).orElseThrow(NoSuchElementException::new);
-        if (ad.getUser().getUsername().equals(username)) {
+        Comment comment = commentRepository.findByPk(commentPk).orElseThrow(
+                NoSuchElementException::new);
+
+        if (ad.getUser().getUsername().equals(username) || ad.getUser().getRole().equals(Role.ADMIN.name())
+        || comment.getUser().getUsername().equals(username)) {
             commentRepository.deleteById(commentPk);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -78,9 +85,14 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto updateComment(Integer adPk, Integer commentId, CreateOrUpdateCommentDto createOrUpdateCommentDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        Comment oldComment = commentRepository.findByPk(commentId).get();
+        Comment oldComment = commentRepository.findByPk(commentId).orElseThrow(
+                NoSuchElementException::new);
         Ad ad = adRepository.findByPk(adPk).orElseThrow(NoSuchElementException::new);
-        if (ad.getUser().getUsername().equals(username)) {
+        Comment comment = commentRepository.findByPk(commentId).orElseThrow(
+                NoSuchElementException::new);
+
+        if (ad.getUser().getUsername().equals(username) || ad.getUser().getRole().equals(Role.ADMIN.name())
+                || comment.getUser().getUsername().equals(username)) {
             oldComment.setText(createOrUpdateCommentDto.getText());
             commentRepository.save(oldComment);
         } else {
@@ -89,11 +101,11 @@ public class CommentServiceImpl implements CommentService {
         return CommentDto.fromComment(oldComment);
     }
 
-    public String getCurrentTimeStamp() {
-        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        Date now = new Date();
-        String strDate = sdfDate.format(now);
-        return strDate;
+    public Integer getCurrentTimeStamp() {
+        SimpleDateFormat sdfDate = new SimpleDateFormat("hh:mm:ss dd-MM-yyyy");
+        LocalDateTime now = LocalDateTime.now();
+
+        return Integer.valueOf(sdfDate.format(now));
     }
 
 }
