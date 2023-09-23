@@ -7,9 +7,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
+import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.UserRepository;
@@ -61,9 +64,21 @@ class UserServiceImplTest {
 
     @Test
     void updateUser() {
+        when(userRepository.findUserByUsername(user.getUsername()))
+                .thenReturn(Optional.ofNullable(user));
+        UpdateUserDto updateUserDto = new UpdateUserDto("Cip", "PolL", "123445");
+        assertEquals(out.updateUser(user.getUsername(), updateUserDto).getFirstName(), updateUserDto.getFirstName());
+        verify(userRepository, times(1)).save(user);
     }
 
     @Test
     void updateUserAvatar() {
+        MultipartFile file = null;
+        when(userRepository.findUserByUsername(user.getUsername()))
+                .thenReturn(Optional.ofNullable(user));
+        when(imageService.uploadImage(file)).thenReturn("NewImage");
+        out.updateUserAvatar(user.getUsername(), file);
+        assertEquals(user.getImage(), "NewImage");
+        verify(imageService, times(1)).uploadImage(file);
     }
 }
