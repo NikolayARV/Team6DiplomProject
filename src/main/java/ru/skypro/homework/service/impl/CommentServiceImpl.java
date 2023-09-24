@@ -59,12 +59,12 @@ public class CommentServiceImpl implements CommentService {
         Ad ad = adRepository.findByPk(adPk).orElseThrow(NoSuchElementException::new);
         User newUser = userRepository.findUserByUsername(username)
                 .orElseThrow(NoSuchElementException::new);
-        //Integer date = getCurrentTimeStamp();
+
         Comment newComment = new Comment(newUser, ad, newUser.getImage(), newUser.getFirstName(), Instant.now(), createOrUpdateCommentDto.getText());
         commentRepository.save(newComment);
         return CommentDto.fromComment(newComment);
     }
-    //if (user.equals(oldAd.getUser()) || user.getRole().equals(Role.ADMIN.name()))
+
     @Override
     public void deleteComment(Integer adPk, Integer commentPk) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
