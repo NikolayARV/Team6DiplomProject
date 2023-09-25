@@ -4,9 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CommentsDto;
+import ru.skypro.homework.dto.CreateOrUpdateCommentDto;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.User;
@@ -20,8 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CommentServiceImplTest {
@@ -52,20 +54,15 @@ class CommentServiceImplTest {
     }
 
     @Test
-    void createNewComment() {
-
-    }
-
-    @Test
-    void deleteComment() {
-
-    }
-
-    @Test
-    void updateComment() {
-    }
-
-    @Test
-    void getCurrentTimeStamp() {
+    void ShouldBeNotEqualsWhenCreateNewCommentBecauseOfTimeOfCreation() {
+        ad.setPk(1);
+        ad.setUser(user);
+        Comment comment1 = new Comment(user, ad, user.getImage(),
+                "Bob", Instant.now(), "Blala");
+        CreateOrUpdateCommentDto crOrUpdCommDto = new CreateOrUpdateCommentDto("Blala");
+        when(adRepository.findByPk(ad.getPk())).thenReturn(Optional.of(ad));
+        when(userRepository.findUserByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(commentRepository.save(Mockito.any(Comment.class))).thenReturn(null);
+        assertNotEquals(out.createNewComment(1,crOrUpdCommDto, "name"), CommentDto.fromComment(comment1));
     }
 }
