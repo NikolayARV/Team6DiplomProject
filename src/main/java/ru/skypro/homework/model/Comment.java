@@ -39,4 +39,5 @@ public class Comment {
         this.createdAt = createdAt;
         this.text = text;
     }
+
 }
