@@ -14,7 +14,4 @@ public interface UserService {
     UserDto updateUser(String email, UpdateUserDto updateUser);
     void updateUserAvatar (String username, MultipartFile avatar);
 
-    byte[] getAvatar(String username);
-
-    User getUser(String username);
 }

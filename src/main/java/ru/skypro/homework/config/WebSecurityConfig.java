@@ -4,6 +4,7 @@ import liquibase.database.core.H2Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -38,9 +39,10 @@ public class WebSecurityConfig {
             "/v3/api-docs",
             "/webjars/**",
             "/login",
+            "/register",
             "/ads",
-            "/ads/*/image",
-            "/register"
+            "/ads/image/*",
+            "/users/image/*"
     };
 
 
@@ -54,18 +56,7 @@ public class WebSecurityConfig {
         return jdbcUserDetailsManager;
     }
 
-    /**
-     * @Bean public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
-     * UserDetails user =
-     * User.builder()
-     * .username("user@gmail.com")
-     * .password("password")
-     * .passwordEncoder(passwordEncoder::encode)
-     * .roles(Role.USER.name())
-     * .build();
-     * return new InMemoryUserDetailsManager(user);
-     * }
-     */
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf()
@@ -75,6 +66,7 @@ public class WebSecurityConfig {
                                 authorization
                                         .mvcMatchers(AUTH_WHITELIST)
                                         .permitAll()
+                                        .mvcMatchers(HttpMethod.GET, "/ads").permitAll()
                                         .mvcMatchers("/ads/**", "/users/**")
                                         .authenticated())
                 .cors()

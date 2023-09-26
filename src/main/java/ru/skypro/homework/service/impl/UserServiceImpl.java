@@ -30,14 +30,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updatePassword(String username, NewPasswordDto newPasswordDto) {
+        User user = userRepository.findUserByUsername(username)
+                .orElseThrow(NoSuchElementException::new);
 
-        UserDto userDto = UserDto.fromUser(userRepository.findUserByUsername(username).orElseThrow(NoSuchElementException::new));
 
-        String encryptedPassword = userDto.getPassword();
+        String encryptedPassword = user.getPassword();
         if (encoder.matches(newPasswordDto.getCurrentPassword(), encryptedPassword)) {
-            userDto.setPassword(encoder.encode(newPasswordDto.getNewPassword()));
+            user.setPassword(encoder.encode(newPasswordDto.getNewPassword()));
 
-            userRepository.save(userDto.toUser());
+            userRepository.save(user);
         } else {
             throw new NoSuchElementException("User inputs wrong current password");
         }
@@ -52,7 +53,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(String email, UpdateUserDto updateUser) {
-        User user = userRepository.getUserByUsername(email);
+        User user = userRepository.findUserByUsername(email)
+                .orElseThrow(NoSuchElementException::new);
         user.setFirstName(updateUser.getFirstName());
         user.setLastName(updateUser.getLastName());
         user.setPhone(updateUser.getPhone());
@@ -64,25 +66,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserAvatar(String username, MultipartFile image) {
         String avatar = imageService.uploadImage(image);
-        UserDto userDto = UserDto.fromUser(userRepository
+        User user = userRepository
                 .findUserByUsername(username)
-                .orElseThrow(NoSuchElementException::new));
-        userDto.setImage(avatar);
-        userRepository.save(userDto.toUser());
+                .orElseThrow(NoSuchElementException::new);
+        user.setImage(avatar);
+        userRepository.save(user);
 
 
     }
 
-    @Override
-    public byte[] getAvatar(String username) {
-        UserDto userDto = UserDto.fromUser(userRepository
-                .findUserByUsername(username)
-                .orElseThrow(NoSuchElementException::new));
-        return imageService.getImage(userDto.getImage());
-    }
-
-    @Override
-    public User getUser(String username) {
-        return userRepository.getUserByUsername(username);
-    }
 }
